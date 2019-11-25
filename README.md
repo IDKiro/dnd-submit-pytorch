@@ -1,12 +1,12 @@
 # DND Submit
 
-Train your own model of denoising and submit the denoised results to [DND](https://noise.visinf.tu-darmstadt.de/).
+Train your own model for denoising and submit the denoised results to [DND](https://noise.visinf.tu-darmstadt.de/).
 
 > Typical result: sRGB track, PSNR > 39, SSIM > 0.95
 
 ## Data
 
-Download the [dataset (22 GB)](https://zjueducn-my.sharepoint.com/:f:/g/personal/3140103306_zju_edu_cn/EgwvTgGsxedPq9BmLMPWOSABp2wv0fjnCHD_ayrSEVVDDw?e=L4fcy7) and extract the files to `data` folder.
+Download the [dataset (22 GB)](https://pan.baidu.com/s/13_P1OnSqjVYO2bsei_ZbvQ) (xmfw) and extract the files to `data` folder.
 
 ## Model
 

@@ -2,16 +2,13 @@ from __future__ import division
 from __future__ import print_function
 import os, time, scipy.io, shutil, importlib
 import numpy as np
-import glob
 import argparse
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from skimage import io
 
 from utils import AverageMeter, chw_to_hwc
 from dataset.loader import RealNoise
-from model.resnet import Network
 
 parser = argparse.ArgumentParser(description = 'Train')
 parser.add_argument('--model', default='resnet', type=str, help='model name')
@@ -74,44 +71,46 @@ def train(train_loader, model, criterion, optimizer, epoch, result_dir):
 			io.imsave(os.path.join(result_dir, '%04d/train_%d.jpg'%(epoch, ind)), np.uint8(temp * 255))
 
 
+if __name__ == '__main__':
 
-train_dir = './data/real/'
-save_dir = os.path.join('./save_model/', args.model)
-result_dir = os.path.join('./result/', args.model)
+	train_dir = './data/real/'
+	save_dir = os.path.join('./save_model/', args.model)
+	result_dir = os.path.join('./result/', args.model)
 
-model = importlib.import_module('.' + args.model, package='model').Network()
-print(model)
-model.cuda()
+	model = importlib.import_module('.' + args.model, package='model').Network()
+	print(model)
+	model.cuda()
 
-if os.path.exists(os.path.join(save_dir, 'checkpoint.pth.tar')):
-	# load existing model
-	model_info = torch.load(os.path.join(save_dir, 'checkpoint.pth.tar'))
-	print('==> loading existing model:', os.path.join(save_dir, 'checkpoint.pth.tar'))
-	model.load_state_dict(model_info['state_dict'])
-	optimizer = torch.optim.Adam(model.parameters())
-	optimizer.load_state_dict(model_info['optimizer'])
-	cur_epoch = model_info['epoch']
-else:
-	if not os.path.isdir(save_dir):
-		os.makedirs(save_dir)
-	# create model
-	optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-	cur_epoch = 0
+	if os.path.exists(os.path.join(save_dir, 'checkpoint.pth.tar')):
+		# load existing model
+		model_info = torch.load(os.path.join(save_dir, 'checkpoint.pth.tar'))
+		print('==> loading existing model:', os.path.join(save_dir, 'checkpoint.pth.tar'))
+		model.load_state_dict(model_info['state_dict'])
+		optimizer = torch.optim.Adam(model.parameters())
+		optimizer.load_state_dict(model_info['optimizer'])
+		cur_epoch = model_info['epoch']
+	else:
+		if not os.path.isdir(save_dir):
+			os.makedirs(save_dir)
+		# create model
+		optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+		cur_epoch = 0
 
-criterion = nn.MSELoss()
-criterion.cuda()
+	criterion = nn.MSELoss()
+	criterion.cuda()
 
-train_dataset = RealNoise(train_dir, patch_size=args.ps)
-train_loader = torch.utils.data.DataLoader(
-	train_dataset, batch_size=1, shuffle=True, pin_memory=True)
+	train_dataset = RealNoise(train_dir, patch_size=args.ps)
+	
+	train_loader = torch.utils.data.DataLoader(
+		train_dataset, batch_size=1, shuffle=True, pin_memory=True)
 
-for epoch in range(cur_epoch, args.epochs + 1):
+	for epoch in range(cur_epoch, args.epochs + 1):
 
-	optimizer = adjust_learning_rate(optimizer, epoch)
-	train(train_loader, model, criterion, optimizer, epoch, result_dir)
+		optimizer = adjust_learning_rate(optimizer, epoch)
+		train(train_loader, model, criterion, optimizer, epoch, result_dir)
 
-	torch.save({
-		'epoch': epoch + 1,
-		'state_dict': model.state_dict(),
-		'optimizer' : optimizer.state_dict()}, 
-		os.path.join(save_dir, 'checkpoint.pth.tar'))
+		torch.save({
+			'epoch': epoch + 1,
+			'state_dict': model.state_dict(),
+			'optimizer' : optimizer.state_dict()}, 
+			os.path.join(save_dir, 'checkpoint.pth.tar'))

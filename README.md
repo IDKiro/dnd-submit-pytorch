@@ -6,11 +6,11 @@ Train your own model for denoising and submit the denoised results to [DND](http
 
 ## Data
 
-Download the [dataset (22 GB)](https://pan.baidu.com/s/13_P1OnSqjVYO2bsei_ZbvQ) (xmfw) and extract the files to `data` folder.
+Download the [dataset (22 GB)](https://pan.baidu.com/s/13_P1OnSqjVYO2bsei_ZbvQ) (xmfw) and extract the files to `./data/` folder.
 
 ## Model
 
-This repo provides the codes of DnCNN, U-Net and ResNet, but you can use your own model by add it to `model` folder.
+This repo provides the codes of DnCNN, U-Net and ResNet, but you can use your own model by adding it to `./model/` folder.
 
 ## Train
 
@@ -42,7 +42,7 @@ Test the trained model on DND and get the denoised results:
 python submit.py --model YourModelName
 ```
 
-The results are in `/result/test/bundled/`.
+The results are in `./result/test/bundled/`.
 
 ## Reference
 

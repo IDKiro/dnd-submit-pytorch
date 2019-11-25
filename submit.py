@@ -5,7 +5,6 @@ import torch
 import argparse
 
 from utils import pytorch_denoiser, denoise_srgb, bundle_submissions_srgb
-from model.resnet import Network
 
 parser = argparse.ArgumentParser(description = 'Test')
 parser.add_argument('--model', default='resnet', type=str, help='model name')

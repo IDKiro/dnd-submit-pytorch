@@ -8,7 +8,8 @@ import torch.nn as nn
 from skimage import io
 
 from utils import AverageMeter, chw_to_hwc
-from dataset.loader import RealNoise
+from dataset.loader import RealNoise, SynNoise
+
 
 parser = argparse.ArgumentParser(description = 'Train')
 parser.add_argument('--model', default='resnet', type=str, help='model name')
@@ -17,6 +18,7 @@ parser.add_argument('--lr', default=1e-4, type=float, help='learning rate')
 parser.add_argument('--epochs', default=1000, type=int, help='sum of epochs')
 parser.add_argument('--freq', default=500, type=int, help='learning rate update frequency')
 parser.add_argument('--save_freq', default=100, type=int, help='save result frequency')
+parser.add_argument('--syn', action='store_true', help='use synthetic noisy images')
 args = parser.parse_args()
 
 
@@ -72,8 +74,6 @@ def train(train_loader, model, criterion, optimizer, epoch, result_dir):
 
 
 if __name__ == '__main__':
-
-	train_dir = './data/real/'
 	save_dir = os.path.join('./save_model/', args.model)
 	result_dir = os.path.join('./result/', args.model)
 
@@ -99,8 +99,11 @@ if __name__ == '__main__':
 	criterion = nn.MSELoss()
 	criterion.cuda()
 
-	train_dataset = RealNoise(train_dir, patch_size=args.ps)
-	
+	if args.syn:
+		train_dataset = SynNoise('./data/syn/', patch_size=args.ps)
+	else:
+		train_dataset = RealNoise('./data/real/', patch_size=args.ps)
+
 	train_loader = torch.utils.data.DataLoader(
 		train_dataset, batch_size=1, shuffle=True, pin_memory=True)
 

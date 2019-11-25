@@ -6,7 +6,7 @@ Train your own model of denoising and submit the denoised results to [DND](https
 
 ## Data
 
-Download the [dataset (22 GB)]() and extract the files to `data` folder.
+Download the [dataset (22 GB)](https://zjueducn-my.sharepoint.com/:f:/g/personal/3140103306_zju_edu_cn/EgwvTgGsxedPq9BmLMPWOSABp2wv0fjnCHD_ayrSEVVDDw?e=L4fcy7) and extract the files to `data` folder.
 
 ## Model
 
